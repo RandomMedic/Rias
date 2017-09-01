@@ -1110,5 +1110,5 @@ def onFloodBan(self, room):
 
 
 if __name__ == "__main__":
-  Silent.easy_start(rooms, "RandomMedic", "Bagcartoful112!@#")
+  Silent.easy_start(rooms, "Riasbot", "Mitica112")
       
