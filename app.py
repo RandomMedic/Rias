@@ -14,8 +14,6 @@ import dictBot as dB
 import json
 from inventar import candy
 from candyt import candyt
-from vipxp import vipxp
-from vipxpt import vipxpt
 from poof import poof
 if sys.version_info[0] > 2:
   import urllib.request as urlreq
@@ -26,7 +24,7 @@ startTime = time.time()
 
 
 lockdown = False
-activated = False 
+activated = True
 kill = False
 
 
@@ -88,13 +86,6 @@ for name in file.readlines():
 print("NOTICE: Locked Rooms loaded.")
 file.close()
 
-permvip = []
-file = open("permvip.txt", 'r')
-for name in file.readlines():
-  if len(name.strip()) > 0 :
-    permvip.append(name.strip())
-print("NOTICE: Vip list loaded.")
-file.close()
 
 zar = []
 file = open("zar.txt", 'r')
@@ -142,7 +133,7 @@ def curtime():
 class Silent(ch.RoomManager):
   def onInit(self):
     self.setNameColor("FF0000")
-    self.setFontColor("FF0000")
+    self.setFontColor("ff0000")
     self.setFontFace("1")
     self.setFontSize(11)
     self.enableBg()
@@ -180,17 +171,8 @@ class Silent(ch.RoomManager):
     f = open("poof.py", "w")
     f.write("poof ="+str(poof))
     f.close()
-    f = open("permvip.txt", "w")
-    f.write("\n".join(permvip))
-    f.close()
     f = open("zar.txt", "w")
     f.write("\n".join(zar))
-    f.close()
-    f = open("vipxp.py", "w")
-    f.write("vipxp ="+str(vipxp))
-    f.close()
-    f = open("vipxpt.py", "w")
-    f.write("vipxpt ="+str(vipxpt))
     f.close()
 
 
@@ -210,7 +192,6 @@ class Silent(ch.RoomManager):
     if user.name in fondator and not user.name in blacklist: return 69
     if user.name in owner and not user.name in blacklist: return 6
     elif user.name in mod and not user.name in blacklist: return 5
-    elif user.name in permvip and not user.name in blacklist: return 4
     elif user.name in registered and user.name in vroom.ownername and not user.name in blacklist: return 3
     elif user.name in registered and user.name in vroom.modnames and not user.name in blacklist: return 2
     elif user.name in registered and not user.name in vroom.ownername and not user.name in room.modnames and not user.name in blacklist: return 1
@@ -314,7 +295,7 @@ class Silent(ch.RoomManager):
               url = urlreq.urlopen("https://www.googleapis.com/youtube/v3/search?q=%s&part=snippet&MaxResults=1&key=AIzaSyAzKmL1Of-gYUFh1HyGlZI9wocjIlSLfUQ" % "+".join(search))
               udict = url.read().decode('utf-8')
               data = json.loads(udict)
-              nest = []
+              nest = [5]
               for d in data["items"]:
                     nest.append(d)
               pick=random.choice(nest)
@@ -354,7 +335,7 @@ class Silent(ch.RoomManager):
               else: room.message("%s"%str(dB.printAlreadyDef("dict.json",defn[0]))) 
 
   
-        if cmd == "candy":
+        if cmd == "candy" or cmd =="loli" or cmd =="mc":
           if self.getAccess(room, user) >= 1:
             u = user.name.lower()
             times = time.time()
@@ -389,6 +370,7 @@ class Silent(ch.RoomManager):
                   f2 = open("candyt.py", "w")
                   f2.write("candyt ="+str(candyt))
                   f2.close()
+                  self.saveAll()
                 else:
                   y=random.randint(0,50)
                   del candyt[u]
@@ -402,6 +384,7 @@ class Silent(ch.RoomManager):
                   f2 = open("candyt.py", "w")
                   f2.write("candyt ="+str(candyt))
                   f2.close()
+                  self.saveAll()
 
               else:
                 x = int(times) - 10800 - int(timepip)
@@ -415,32 +398,9 @@ class Silent(ch.RoomManager):
                 f = open("inventar.py", "w")
                 f.write("candy = "+str(candy)+" \ncandyt = "+str(candyt))
                 f.close()
+                self.saveAll()
          
 
-        if cmd == "vipxp":
-          if self.getAccess(room, user) >= 1:
-            u = user.name.lower()
-            times = time.time()
-            if u in vipxp:
-              y = vipxp[u]
-              if u in vipxpt:
-                timepip= vipxpt[u]
-              else:
-                timepip= 0
-              if int(times)- 400 >= int(timepip):
-                x = random.randint(1, 30)
-                y=y+x
-                if y>=0:
-                  if u in vipxpt:
-                    del vipxpt[u]
-                  vipxpt[u] = times
-                  if x>0:
-                    room.message("Ai primit "+str(x)+" xp")
-                    self.saveAll()
-              else:
-                x = int(times) - 600 - int(timepip)
-                room.message(user.name.capitalize()+": trebuie sa astepti inca "+str(datetime.timedelta(seconds =-x))+" minute. <br/>Ai adunat in total " +str(vipxp[u])+ " vipxp!",True)
-            
         if cmd =="clearbet":
           if self.getAccess(room, user) >= 5:
             poof.clear()
@@ -580,38 +540,14 @@ class Silent(ch.RoomManager):
               listu.append("#"+str(c)+": "+k.title()+" - "+str(candy[k])+" candy")
             room.message("Topul celor mai dulci: <br/>"+"<br/> ".join(listu[:10])+".",True)  
 
-        if cmd == "status":
+        if cmd == "eu" or cmd =="status":
           if self.getAccess(room, user) >= 1:
             if args: u = args.lower()
             else: u = user.name.lower()
-            if u in vipxp:
+            if u in candy:
                 val = candy[u]
-                xp = vipxp[u]
-                room.message(u.capitalize()+"<br/>Total: "+str(val)+" candy"+"<br/>Total: "+str(xp)+" Xp",True)        
-            else:
-                val = candy[u]
-                room.message(u.capitalize()+"<br/>Total: "+str(val)+" candy",True) 
+                room.message("tu esti "+u.capitalize()+" Vezi ca stiu :) <br/> Si ai adunat un total de: "+str(val)+" candy",True) 
 
-              
-        if cmd == "cumpara" or cmd == "buy":
-          if self.getAccess(room, user) >= 1:
-            if args == "vip":
-              u=user.name.lower()
-              k=-25000
-              if u in candy:
-                  test = candy[u]
-                  if test>25000:  
-                    if u in registered:
-                      room.message("Ai cumparat Vip") 
-                      registered.remove(user.name)
-                      permvip.append(user.name)
-                      t=test+k
-                      candy.update({u:t})
-                      self.saveAll()
-                    else:
-                      room.message("Esti deja Vip.")
-                  else:
-                     room.message("Ai nevoie de 10000 candy")
 
         if cmd == "cumpara" or cmd == "buy":
           if self.getAccess(room, user) >= 1:
@@ -654,7 +590,7 @@ class Silent(ch.RoomManager):
 
         if cmd == "shop":
           if self.getAccess(room, user) >= 1:
-           room.message("Din magazin poti cumpara"+"<br/><font color='#9999FF'><b>[Ranks]</b></font> -> *vip* *moderator*"+"<br/><font color='#9999FF'><b>[Other]</b></font> -> *zaruri*", True)
+           room.message("Din magazin poti cumpara"+"<br/><font color='#9999FF'><b>[Ranks]</b></font> -> *moderator*"+"<br/><font color='#9999FF'><b>[Other]</b></font> -> *zaruri*", True)
 
         elif cmd == "mods" or cmd == "Mods":
           if self.getAccess(room, user) >= 1:
@@ -723,33 +659,65 @@ class Silent(ch.RoomManager):
           if self.getAccess(room, user) >= 5:
             for room in self.rooms:
               room.message("/loli")
+
+        elif cmd == "pic" or cmd == "Pic" or cmd == "profpic" or cmd == "Profpic":
+          if self.getAccess(room, user) >= 1:
+              if args:
+                stuff=str(urlreq.urlopen("http://"+args+".chatango.com").read().decode("utf-8"))
+                mini=mini.replace("<img","<!")
+                picture = '<a href="http://fp.chatango.com/profileimg/' + args[0] + '/' + args[1] + '/' + args + '/full.jpg" style="z-index:59" target="_blank">http://fp.chatango.com/profileimg/' + args[0] + '/' + args[1] + '/' + args + '/full.jpg</a>'
+                prodata = '<br/><br/><br/> <a href="http://chatango.com/fullpix?' + args + '" target="_blank">' + picture 
+                room.message(prodata,True)
+              else:
+                stuff=str(urlreq.urlopen("http://"+user.name+".chatango.com").read().decode("utf-8"))
+                picture = '<a href="http://fp.chatango.com/profileimg/' + user.name[0] + '/' + user.name[1] + '/' + user.name + '/full.jpg" style="z-index:59" target="_blank">http://fp.chatango.com/profileimg/' + user.name[0] + '/' + user.name[1] + '/' + user.name + '/full.jpg</a>'
+                prodata = '<br/><br/><br/> <a href="http://chatango.com/fullpix?' + user.name + '" target="_blank">' + picture 
+                room.message(prodata,True)       
                       
 
         elif cmd == "prof" or cmd == "profile" or cmd == "Prof" or cmd == "Profile":
           if self.getAccess(room, user) >= 1:
-            try:
-              args=args.lower()
-              stuff=str(urlreq.urlopen("http://"+args+".chatango.com").read().decode("utf-8"))
-              crap, age = stuff.split('<span class="profile_text"><strong>Age:</strong></span></td><td><span class="profile_text">', 1)
-              age, crap = age.split('<br /></span>', 1)
-              crap, gender = stuff.split('<span class="profile_text"><strong>Gender:</strong></span></td><td><span class="profile_text">', 1)
-              gender, crap = gender.split(' <br /></span>', 1)
-              if gender == 'M':
-                  gender = 'Male'
-              elif gender == 'F':
-                  gender = 'Female'
+              if args:
+                args=args.lower()
+                stuff=str(urlreq.urlopen("http://"+args+".chatango.com").read().decode("utf-8"))
+                crap, age = stuff.split('<span class="profile_text"><strong>Age:</strong></span></td><td><span class="profile_text">', 1)
+                age, crap = age.split('<br /></span>', 1)
+                crap, gender = stuff.split('<span class="profile_text"><strong>Gender:</strong></span></td><td><span class="profile_text">', 1)
+                gender, crap = gender.split(' <br /></span>', 1)
+                if gender == 'M':
+                    gender = 'Male'
+                elif gender == 'F':
+                    gender = 'Female'
+                else:
+                    gender = '?'
+                crap, location = stuff.split('<span class="profile_text"><strong>Location:</strong></span></td><td><span class="profile_text">', 1)
+                location, crap = location.split(' <br /></span>', 1)
+                crap,mini=stuff.split("<span class=\"profile_text\"><!-- google_ad_section_start -->",1)
+                mini,crap=mini.split("<!-- google_ad_section_end --></span>",1)
+                mini=mini.replace("<img","<!")
+                picture = '<a href="http://fp.chatango.com/profileimg/' + args[0] + '/' + args[1] + '/' + args + '/full.jpg" style="z-index:59" target="_blank">http://fp.chatango.com/profileimg/' + args[0] + '/' + args[1] + '/' + args + '/full.jpg</a>'
+                prodata = '<br/> <a href="http://chatango.com/fullpix?' + args + '" target="_blank">' + picture + '<br/><br/> Varsta: '+ age + ' <br/> Sex: ' + gender +  ' <br/> Locatie: ' +  location
+                room.message(prodata,True)
               else:
-                  gender = '?'
-              crap, location = stuff.split('<span class="profile_text"><strong>Location:</strong></span></td><td><span class="profile_text">', 1)
-              location, crap = location.split(' <br /></span>', 1)
-              crap,mini=stuff.split("<span class=\"profile_text\"><!-- google_ad_section_start -->",1)
-              mini,crap=mini.split("<!-- google_ad_section_end --></span>",1)
-              mini=mini.replace("<img","<!")
-              picture = '<a href="http://fp.chatango.com/profileimg/' + args[0] + '/' + args[1] + '/' + args + '/full.jpg" style="z-index:59" target="_blank">http://fp.chatango.com/profileimg/' + args[0] + '/' + args[1] + '/' + args + '/full.jpg</a>'
-              prodata = '<br/> <a href="http://chatango.com/fullpix?' + args + '" target="_blank">' + picture + '<br/><br/> Varsta: '+ age + ' <br/> Sex: ' + gender +  ' <br/> Locatie: ' +  location
-              room.message(prodata,True)
-            except:
-              room.message(""+args+" Nu exista o.o ")     
+                stuff=str(urlreq.urlopen("http://"+user.name+".chatango.com").read().decode("utf-8"))
+                crap, age = stuff.split('<span class="profile_text"><strong>Age:</strong></span></td><td><span class="profile_text">', 1)
+                age, crap = age.split('<br /></span>', 1)
+                crap, gender = stuff.split('<span class="profile_text"><strong>Gender:</strong></span></td><td><span class="profile_text">', 1)
+                gender, crap = gender.split(' <br /></span>', 1)
+                if gender == 'M':
+                    gender = 'Male'
+                elif gender == 'F':
+                    gender = 'Female'
+                else:
+                    gender = '?'
+                crap, location = stuff.split('<span class="profile_text"><strong>Location:</strong></span></td><td><span class="profile_text">', 1)
+                location, crap = location.split(' <br /></span>', 1)
+                crap,mini=stuff.split("<span class=\"profile_text\"><!-- google_ad_section_start -->",1)
+                mini,crap=mini.split("<!-- google_ad_section_end --></span>",1)
+                mini=mini.replace("<img","<!")
+                picture = '<a href="http://fp.chatango.com/profileimg/' + user.name[0] + '/' + user.name[1] + '/' + user.name + '/full.jpg" style="z-index:59" target="_blank">http://fp.chatango.com/profileimg/' + user.name[0] + '/' + user.name[1] + '/' + user.name + '/full.jpg</a>'
+                prodata = '<br/> <a href="http://chatango.com/fullpix?' + user.name + '" target="_blank">' + picture + '<br/><br/> Varsta: '+ age + ' <br/> Sex: ' + gender +  ' <br/> Locatie: ' +  location
+                room.message(prodata,True)     
 
         if cmd == "save" and self.getAccess(room, user) >= 5:
           self.saveAll()
@@ -887,7 +855,7 @@ class Silent(ch.RoomManager):
             target, rank = args.split(" ", 1)
             target = str(target)
             rank = int(rank)
-            available_rank = [-1,0,1,2,3,4,5,6,17,69]
+            available_rank = [-1,0,1,2,3,5,6,17,69]
             if not rank in available_rank:
               room.message("Scrie un numar valid.")
               return
@@ -917,23 +885,10 @@ class Silent(ch.RoomManager):
               mod.append(target)
               room.message(target.title()+" Rank setat: "+str(rank)+" [Moderator]")
               self.saveAll()
-            if rank == 4:
-              if target in permvip:
-                room.message(target.title()+" Este deja  Vip.")
-                return
-              if target in blacklist:
-                blacklist.pop(target)
-              if target in owner:
-                owner.remove(target)
-              if target in registered:
-                registered.remove(target)
-              permvip.append(target)
-              room.message(target.title()+" Rank setat: "+str(rank)+" [Vip]")
-              self.saveAll()
             if rank == 6:
               if user.name == "": return
               if target in owner:
-                room.message(target.title()+" Este deja  Co-Owner.")
+                room.message(target.title()+" Este deja Owner.")
                 return
               if target in blacklist:
                 blacklist.pop(target)
@@ -949,7 +904,7 @@ class Silent(ch.RoomManager):
             if rank == 69:
               if user.name == "": return 
               if target in fondator:
-                room.message(target.title()+" Este deja  Rias Best Wiafu.")
+                room.message(target.title()+" Este deja  Fondator.")
                 return
               if target in blacklist:
                 blacklist.pop(target)
@@ -960,7 +915,7 @@ class Silent(ch.RoomManager):
               if target in owner:
                 owner.remove(target)
               fondator.append(target)
-              room.message(target.title()+" Rank setat: "+str(rank)+" [Rias Best Waifu]")
+              room.message(target.title()+" Rank setat: "+str(rank)+" [Fondator]")
               self.saveAll()
             if rank == 0:
               if user.name == "": return 
@@ -994,10 +949,7 @@ class Silent(ch.RoomManager):
               room.message("Ranku tau este: <font color='#7cfc00'><b>%s</b></font> [<font color='#7cfc00'>%s</font>]" % (rank, title), True)
             if rank == 3:
               title = "Room Admin"
-              room.message("Ranku tau este: <font color='#7cfc00'><b>%s</b></font> [<font color='#7cfc00'>%s</font>]" % (rank, title), True)
-            if rank == 4:
-              title = "Vip"
-              room.message("Ranku tau este: <font color='#0000ff'><b>%s</b></font> [<font color='#fffaf0'><b>%s</b></font>]" % (rank, title), True)  
+              room.message("Ranku tau este: <font color='#7cfc00'><b>%s</b></font> [<font color='#7cfc00'>%s</font>]" % (rank, title), True)  
             if rank == 5:
               title = "Moderator"
               room.message("Ranku tau este: <font color='#0000ff'><b>%s</b></font> [<font color='#fffaf0'><b>%s</b></font>]" % (rank, title), True)
@@ -1005,7 +957,7 @@ class Silent(ch.RoomManager):
               title = "Owner"
               room.message("Ranku tau este: <font color='#c0c0c0'><b>%s</b></font> [<font color='#87ceeb'><b>%s</b></font>]" % (rank, title), True)
             if rank == 69:
-              title = "Rias Best Waifu"
+              title = "Fondator"
               room.message("Ranku tau este: <font color='#c0c0c0'><b>%s</b></font> [<font color='#87ceeb'><b>%s</b></font>]" % (rank, title), True)  
           else:
               rank = self.getAccess(room, ch.User(args))
@@ -1019,10 +971,7 @@ class Silent(ch.RoomManager):
                 room.message(args+" Ranku lui este: <font color='#7cfc00'><b>%s</b></font> [<font color='#7cfc00'>%s</font>]" % (rank, title), True)
               if rank == 3:
                 title = "Room Admin"
-                room.message(args+" Ranku lui este: <font color='#7cfc00'><b>%s</b></font> [<font color='#7cfc00'>%s</font>]" % (rank, title), True)
-              if rank == 4:
-                title = "Vip"
-                room.message("Ranku lui este: <font color='#0000ff'><b>%s</b></font> [<font color='#fffaf0'><b>%s</b></font>]" % (rank, title), True)  
+                room.message(args+" Ranku lui este: <font color='#7cfc00'><b>%s</b></font> [<font color='#7cfc00'>%s</font>]" % (rank, title), True)  
               if rank == 5:
                 title = "Moderator"
                 room.message("Ranku lui este: <font color='#0000ff'><b>%s</b></font> [<font color='#fffaf0'><b>%s</b></font>]" % (rank, title), True)
@@ -1030,7 +979,7 @@ class Silent(ch.RoomManager):
                 title = "Owner"
                 room.message("Ranku lui este: <font color='#c0c0c0'><b>%s</b></font> [<font color='#87ceeb'><b>%s</b></font>]" % (rank, title), True)
               if rank == 69:
-                title = "Rias Best Waifu"
+                title = "Fondator"
                 room.message("Ranku lui este: <font color='#c0c0c0'><b>%s</b></font> [<font color='#87ceeb'><b>%s</b></font>]" % (rank, title), True)  
            
         elif cmd == "level":
