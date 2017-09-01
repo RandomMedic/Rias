@@ -1,1 +1,1 @@
-candyt = {'randommedic': 1499005172.6, 'elena9000': 1499005182.9, 'unogin': 1499005190.86}
+candyt = {}
