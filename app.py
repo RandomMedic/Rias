@@ -141,8 +141,8 @@ def curtime():
 
 class Silent(ch.RoomManager):
   def onInit(self):
-    self.setNameColor("FFFFFF")
-    self.setFontColor("FFFFFF")
+    self.setNameColor("FF0000")
+    self.setFontColor("FF0000")
     self.setFontFace("1")
     self.setFontSize(11)
     self.enableBg()
