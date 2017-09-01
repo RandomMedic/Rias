@@ -663,6 +663,7 @@ class Silent(ch.RoomManager):
         elif cmd == "pic" or cmd == "Pic" or cmd == "profpic" or cmd == "Profpic":
           if self.getAccess(room, user) >= 1:
               if args:
+                args=args.lower()
                 stuff=str(urlreq.urlopen("http://"+args+".chatango.com").read().decode("utf-8"))
                 mini=mini.replace("<img","<!")
                 picture = '<a href="http://fp.chatango.com/profileimg/' + args[0] + '/' + args[1] + '/' + args + '/full.jpg" style="z-index:59" target="_blank">http://fp.chatango.com/profileimg/' + args[0] + '/' + args[1] + '/' + args + '/full.jpg</a>'
