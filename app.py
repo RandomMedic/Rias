@@ -648,6 +648,9 @@ class Silent(ch.RoomManager):
             else:
                self.pm.message(ch.User(args), user.name.capitalize()+" Vrea sa vii pe - www."+room.name+".chatango.com ")
                room.message("Gata i-am trimis un pm lu "+args+" , Sa intre pe "+room.name)
+              
+        if pm.message=="da":
+          pm.message(" ce")
 
         elif cmd=="global" and len(args) > 0:
           if self.getAccess(room, user) >= 5:
