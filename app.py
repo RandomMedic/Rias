@@ -666,7 +666,6 @@ class Silent(ch.RoomManager):
               if args:
                 args=args.lower()
                 stuff=str(urlreq.urlopen("http://"+args+".chatango.com").read().decode("utf-8"))
-                mini=mini.replace("<img","<!")
                 picture = '<a href="http://fp.chatango.com/profileimg/' + args[0] + '/' + args[1] + '/' + args + '/full.jpg" style="z-index:59" target="_blank">http://fp.chatango.com/profileimg/' + args[0] + '/' + args[1] + '/' + args + '/full.jpg</a>'
                 prodata = '<br/><br/><br/> <a href="http://chatango.com/fullpix?' + args + '" target="_blank">' + picture 
                 room.message(prodata,True)
