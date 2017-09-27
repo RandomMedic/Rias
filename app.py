@@ -208,7 +208,7 @@ class Silent(ch.RoomManager):
         registered.append(user.name)
         self.saveAll()  
         
- 	def onPMMessage(self, pm, user, body):
+  def onPMMessage(self, pm, user, body):
     pm_data=body.lower().split(" ",1)
     if len(pm_data)>1:
       pm_cmd,pm_args=pm_data[0],pm_data[1]
@@ -226,8 +226,8 @@ class Silent(ch.RoomManager):
         print(e) 
     if pm_cmd=="leaveee":
       try:
-        self.joinRoom(pm_args)
-        print("M-am conectat la %s"%pm_args)
+        self.leaveRoom(pm_args)
+        print("m-am deconectat de la %s"%pm_args)
       except Exception as e:
         print(e) 
   
