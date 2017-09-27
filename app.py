@@ -207,7 +207,23 @@ class Silent(ch.RoomManager):
       if self.getAccess(room, user) == 0:
         registered.append(user.name)
         self.saveAll()  
- 	 
+ 	def onPMMessage(self, pm, user, body):
+    pm_data=body.lower().split(" ",1)
+    if len(pm_data)>1:
+      pm_cmd,pm_args=pm_data[0],pm_data[1]
+    else:
+      pm_cmd,pm_args=pm_data[0],""
+    if len(pm_cmd)>0:
+      if pm_cmd[0].lower():
+        pm_cmd=pm_cmd[1:].lower()
+    else:return
+    if pm_cmd=="join":
+      try:
+        self.joinRoom(pm_args)
+        print("M-am conectat la %s"%pm_args)
+      except Exception as e:
+        print(e) 
+  
   def onMessage(self, room, user, message):    
     if message.body.startswith("/loli"):
       if user.name == "randommedicc" or user.name == "tatsumakid" or user.name == "ddraig01":
