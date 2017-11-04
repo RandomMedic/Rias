@@ -541,12 +541,12 @@ class Silent(ch.RoomManager):
               z = candy[u]
               b = random.randint(10,60)
               if x<y:
-                room.message("am aruncat zaru pentru "+(o.capitalize()+" si am obtinut asta: "+str(y)+". Am aruncat zaru si pentru "+(u.capitalize()+" si am obtinut asta: "+str(x)+". Si castigatoru este "+(o.capitalize()+" care a castigat "+str(b)+" candy"))))
+                room.message("am aruncat zaru pentru "+(o.capitalize()+" si am obtinut asta: "+str(y)+". Am aruncat zaru si pentru "+(u.capitalize()+" si am obtinut asta: "+str(x)+". Si castigatoru este "+(u.capitalize()+" care a castigat "+str(b)+" candy"))))
                 n=z+b
                 candy.update({u:n})
                 self.saveAll()
               else:
-                room.message("am aruncat zaru pentru "+(o.capitalize()+" si am obtinut asta: "+str(y)+". Am aruncat zaru si pentru "+(u.capitalize()+" si am obtinut asta: "+str(x)+". Si castigatoru este "+(u.capitalize()+" care a castigat "+str(b)+" candy"))))
+                room.message("am aruncat zaru pentru "+(o.capitalize()+" si am obtinut asta: "+str(y)+". Am aruncat zaru si pentru "+(u.capitalize()+" si am obtinut asta: "+str(x)+". Si castigatoru este "+(o.capitalize()+" care a castigat "+str(b)+" candy"))))
                 w = candy[o]
                 q = random.randint(10,60)
                 e=w+q
